@@ -469,7 +469,7 @@ angular.module('ui.scroll', [])
       }
 
       function compile(elementTemplate, attr, compileLinker) {
-        const match = attr.uiScroll.match(/^\s*(\w+)\s+in\s+([\w\.]+)\s*$/);
+        const match = attr.uiScroll.match(/^\s*(\w+)\s+in\s+([\w\.\$\_]+)\s*$/);
 
         if (!(match)) {
           throw new Error('Expected uiScroll in form of \'_item_ in _datasource_\' but got \'' + attr.uiScroll + '\'');
@@ -566,6 +566,7 @@ angular.module('ui.scroll', [])
           });
 
           adapter.reload = reload;
+          adapter.reset = reset;
 
           // events and bindings
           function bindEvents() {
@@ -608,6 +609,15 @@ angular.module('ui.scroll', [])
           function dismissPendingRequests() {
             ridActual++;
             pending = [];
+          }
+
+          function reset() {
+            dismissPendingRequests();
+
+            delete datasource.minIndex;
+            delete datasource.maxIndex;
+
+            reload();
           }
 
           function reload() {

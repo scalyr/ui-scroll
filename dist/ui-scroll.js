@@ -1,7 +1,7 @@
 /*!
  * angular-ui-scroll
  * https://github.com/angular-ui/ui-scroll.git
- * Version: 1.3.3 -- 2016-03-23T14:20:29.512Z
+ * Version: 1.3.3 -- 2016-03-26T01:37:04.010Z
  * License: MIT
  */
  
@@ -246,7 +246,7 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function () {
         element.after(bottomPadding);
 
         function Padding(template) {
-          var result = undefined;
+          var result = void 0;
           var tagName = template.localName;
 
           switch (tagName) {
@@ -393,7 +393,7 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function () {
         return;
       }
 
-      var keepIt = undefined;
+      var keepIt = void 0;
       var pos = buffer.indexOf(wrapper) + 1;
 
       newItems.reverse().forEach(function (newItem) {
@@ -450,12 +450,12 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function () {
     };
 
     this.calculateProperties = function () {
-      var i = undefined,
-          item = undefined,
-          itemHeight = undefined,
-          itemTop = undefined,
-          isNewRow = undefined,
-          rowTop = undefined;
+      var i = void 0,
+          item = void 0,
+          itemHeight = void 0,
+          itemTop = void 0,
+          isNewRow = void 0,
+          rowTop = void 0;
       var topHeight = 0;
       for (i = 0; i < buffer.length; i++) {
         item = buffer[i];
@@ -483,7 +483,7 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function () {
   }
 
   function compile(elementTemplate, attr, compileLinker) {
-    var match = attr.uiScroll.match(/^\s*(\w+)\s+in\s+([\w\.]+)\s*$/);
+    var match = attr.uiScroll.match(/^\s*(\w+)\s+in\s+([\w\.\$\_]+)\s*$/);
 
     if (!match) {
       throw new Error('Expected uiScroll in form of \'_item_ in _datasource_\' but got \'' + attr.uiScroll + '\'');
@@ -584,6 +584,7 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function () {
       });
 
       adapter.reload = reload;
+      adapter.reset = reset;
 
       // events and bindings
       function bindEvents() {
@@ -632,6 +633,15 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function () {
       function dismissPendingRequests() {
         ridActual++;
         pending = [];
+      }
+
+      function reset() {
+        dismissPendingRequests();
+
+        delete datasource.minIndex;
+        delete datasource.maxIndex;
+
+        reload();
       }
 
       function reload() {
